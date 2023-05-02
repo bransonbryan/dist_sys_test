@@ -5,6 +5,7 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.lang.Exception
+import java.util.*
 import kotlin.system.exitProcess
 
 class Node(
@@ -24,12 +25,24 @@ class Node(
                     is InitOk -> TODO()
                     is Echo -> handleEcho(message, message.body)
                     is EchoOk -> TODO()
+                    is Generate -> handleGenerate(message, message.body)
+                    is GenerateOk -> TODO()
                 }
             }
         } catch (e: Exception) {
             System.err.println("Caught exception while handling messages + ${e.message}")
             exitProcess(1)
         }
+    }
+
+    private fun handleGenerate(message: Message, generate: Generate): Unit {
+        val reply: GenerateOk = GenerateOk(msgId = idCounter, inReplyTo = generate.msgId, id = UUID.randomUUID())
+        idCounter += 1
+        val replyMsg = Message(id = this.idCounter, src = message.dest, dest = message.src, body = reply)
+        idCounter += 1
+        System.err.println("Built generate ok $reply")
+
+        send(replyMsg)
     }
 
     private fun handleInit(message: Message, init: Init): Unit {
