@@ -12,6 +12,8 @@ val serializers: SerializersModule = SerializersModule {
         subclass(InitOk::class, InitOk.serializer())
         subclass(Echo::class, Echo.serializer())
         subclass(EchoOk::class, EchoOk.serializer())
+        subclass(Generate::class, Generate.serializer())
+        subclass(GenerateOk::class, GenerateOk.serializer())
     }
 }
 
